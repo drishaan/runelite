@@ -38,12 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.Getter;
-import net.runelite.api.Client;
-import net.runelite.api.Constants;
-import net.runelite.api.ItemID;
-import net.runelite.api.NPC;
-import net.runelite.api.NPCComposition;
-import net.runelite.api.Perspective;
+import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
@@ -188,7 +183,7 @@ public class NpcAggroAreaPlugin extends Plugin
 
 	private void transformWorldToLocal(float[] coords)
 	{
-		final LocalPoint lp = LocalPoint.fromWorld(client, (int)coords[0], (int)coords[1]);
+		final LocalPoint lp = LocalPoint.fromWorld(client, (int) coords[0], (int) coords[1]);
 		coords[0] = lp.getX() - Perspective.LOCAL_TILE_SIZE / 2f;
 		coords[1] = lp.getY() - Perspective.LOCAL_TILE_SIZE / 2f;
 	}
@@ -262,6 +257,13 @@ public class NpcAggroAreaPlugin extends Plugin
 		if (Strings.isNullOrEmpty(composition.getName()))
 		{
 			return false;
+		}
+
+		// Case if NPC is Flesh Crawler (always aggressive)
+		if (npc.getId() == NpcID.FLESH_CRAWLER || npc.getId() == NpcID.FLESH_CRAWLER_2499
+			|| npc.getId() == NpcID.FLESH_CRAWLER_2500)
+		{
+			return true;
 		}
 
 		// Most NPCs stop aggroing when the player has more than double
